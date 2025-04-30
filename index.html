@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Webinar Registration</title>
+</head>
+
+<body>
+    <form id="registrationForm">
+        <input type="text" name="firstName" placeholder="First Name" required><br>
+        <input type="text" name="lastName" placeholder="Last Name" required><br>
+        <input type="email" name="email" placeholder="Email" required><br>
+        <input type="text" name="company" placeholder="Company" required><br>
+        <input type="text" name="jobTitle" placeholder="Job Title" required><br>
+        <input type="text" name="eventId" placeholder="Event ID" required><br>
+        <input type="text" name="identifier" placeholder="Identifier (Optional)"><br>
+        <button type="submit">Register</button>
+    </form>
+    <div id="result"></div>
+    <script>
+        document.getElementById('registrationForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                document.getElementById('result').innerText = result.join_url
+                    ? `Registration successful! Join Link: ${result.join_url}`
+                    : 'Registration submitted!';
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('result').innerText = 'An error occurred.';
+            }
+        });
+    </script>
+</body>
+
+</html>
+<!--
+ZoomHubspotMailChimpFormSync
+
+An app handled by firebase serverless function to implement automation of posting on Zoom, HubSpot, MailChimp -->
